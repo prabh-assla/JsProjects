@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>webpage!</title><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><style>
+
+div{
+	font: 1em monospace;
+	color: brown;
+	background-color: skyblue;
+	border: 2px solid grey;
+}
+
+</style></head><body>
+
+	<div class="displayMilli"></div>
+	<div class="display"></div>
+
+	<button id="a">play</button>
+	<button id="b">pause</button>
+	<button id="c">reset</button>
+
+</body><script type="text/javascript">
+
+$(()=>{
+    let milliSecs = 0, secs = 0, idmillisecs = 0, idsecs = 0, msSinceLast = 0, referenceMs = 0, elapsedMs = 0, id = 0;
+
+	function giveElapsedSecs(){
+		return parseInt(milliSecs / 1000);
+	}
+
+	function giveElapsedMs(){
+	    elapsedMs = new Date;
+	    elapsedMs = elapsedMs.getTime();
+	    elapsedMs = parseInt(elapsedMs - referenceMs) + msSinceLast;
+
+	    return elapsedMs;
+	}
+
+	function giveMs(){
+
+	    milliSecs = giveElapsedMs();
+	    secs = giveElapsedSecs();
+
+	    idmillisecs = setTimeout(giveElapsedMs, 1);
+	    idsecs = setTimeout(giveElapsedSecs, 1000);
+	    id = setTimeout(giveMs, 1);
+
+		$('.displayMilli').text(milliSecs);
+		$('.display').text(secs);
+
+	}
+
+			$('#a').click(function(event){
+				referenceMs = new Date();
+				referenceMs = referenceMs.getTime();
+				giveMs();
+			});
+
+
+			$('#b').click(function(event){
+				clearTimeout(idmillisecs);
+				clearTimeout(idsecs);
+				clearTimeout(id);
+
+				msSinceLast = parseInt($('.displayMilli').text());
+
+				$('.displayMilli').text(milliSecs);
+				$('.display').text(secs);
+
+			});
+
+
+			$('#c').click(function(event){
+				clearTimeout(idmillisecs);
+				clearTimeout(idsecs);
+				clearTimeout(id);
+
+		    	milliSecs = 0, secs = 0, idmillisecs = 0, idsecs = 0, msSinceLast = 0, referenceMs = 0, elapsedMs = 0;
+
+				$('.displayMilli').text('0');
+				$('.display').text('0');
+
+			});
+
+
+});
+
+</script></html>

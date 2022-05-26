@@ -1,0 +1,572 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>webpage!</title><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><style>
+
+	body{
+		background-color: rgba(251, 190, 134, 1);
+	}
+	color
+
+	.canvas{
+		height: calc(100vh - 1em);
+		width: calc(100vw - 1em);
+
+		position: absolute;
+	}
+
+	.calcBody{
+		position: relative;
+		width: 50%; 
+		margin: 0 auto;
+
+		top: 6em;
+
+		width: min-content;
+		height: min-content;
+
+		border: 6px solid rgba(255, 255, 255, 1);
+
+		border-radius: 1.2em;
+
+		background-color: rgba(111, 167, 240, 1);
+	}
+
+	.inputOutputHead{
+		width: min-content;
+		height: min-content;
+
+		margin: 0.5em;
+
+		border-radius: 6px;
+
+		border: 4px solid rgba(255, 255, 255, 1);
+
+	}
+
+	.buttonBody{
+		width: min-content;
+		height: min-content;
+
+		margin: 0.5em;
+
+		border-radius: 6px;
+
+		border: 4px solid rgba(255, 255, 255, 1);
+
+	}
+
+	.row{
+		display: inline-flex;
+		margin: 8px 0px;
+		width: 29em;
+		height: 5em;
+	}
+
+	.button{
+		display: inline-block;
+		overflow: hidden;
+	}
+
+	.upside .button, .downside .button{
+
+		height: 4.5em;
+		margin: 0.5em;
+
+		width: 4.6em;
+	}
+
+	.mid .button{
+
+		height: 4.5em;
+		margin: 0.5em;
+
+		width: 6.05em;
+
+	}
+
+	.middest .button{
+
+		width: 5em;
+		margin: 0.3em;
+	}
+
+	.operator{
+
+		background-color: rgba(153, 251, 159, 1) !important;
+		background-clip: content-box;
+
+		border-radius: 1em;
+
+		color: rgba(0, 99, 23, 1);
+
+	}
+
+	.operand{
+
+		background-color: rgba(251, 153, 196, 1) !important;
+		background-clip: content-box;
+
+		border-radius: 1em;
+
+		color: rgba(126, 15, 2, 1);
+	}
+
+	.operator, .operand{
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.operator div, .operand div{
+		font: bold 3.2em monospace;
+	}
+
+	.input{
+		width: 36.83em;
+		height: 7em;
+
+		margin: 0.5em;
+		color: rgba(126, 15, 2, 1);
+	}
+
+	.output{
+		width: 36.83em;
+		height: 3em;
+
+		margin: 0.5em;
+
+		color: rgba(0, 99, 23, 1);
+	}
+
+	.input, .output{
+		resize: none;
+		pointer-events: none;
+
+		border: 3px dotted rgba(255, 255, 255, 1);
+		border-radius: 7px;
+
+		background-color: rgba(255, 206, 237, 1);
+		background-clip: content-box;
+	}
+
+	.upside .button .tl, .downside .button .tl, .mid .button .tl, .middest .button .tl{
+
+	  position: relative;
+	  height: 12px;
+	  width: 12px;
+	  background-color: darkblue;
+	  border-radius: 50%;
+	  left: -0.8px;
+	  top: -0.6em;
+	  border: 4px solid white;
+
+	}
+
+	.mid .button .tl{
+	  left:calc( -0.3em );
+	  top:calc( -0.6em );
+	}
+
+	.middest .button .tl{
+	  left:calc( -0.1em );
+	}
+
+
+	.upside .button .br, .downside .button .br, .mid .button .br, .middest .button .br{
+
+	  position: relative;
+	  height: 12px;
+	  width: 12px;
+	  background-color: darkblue;
+	  border-radius: 50%;
+	  left:calc( 0.1em );
+	  top:calc( 0.5em );
+	  border: 4px solid white;
+
+	}
+
+	.mid .button .br{
+	  left:calc( 0.4em );
+	  top:calc( 0.5em );
+	}
+
+	.middest .button .br{
+	  left:calc( 0.2em );
+	}
+
+	.operand .tl{
+		background-color: darkorange !important;
+	}
+
+	.operand .br{
+		background-color: rgba(222, 84, 190, 1) !important;
+	}
+
+	.operator .tl{
+		background-color: rgba(57, 167, 199, 0.8) !important;
+	}
+
+	.operator .br{
+		background-color: rgba(244, 51, 51, 0.8) !important;
+	}
+
+	.textInsideButton{
+		z-index: 2;
+	}
+
+.tl, .br{
+  transition: 1s transform ease-in-out, 1s border-radius linear;
+}
+
+.button:hover .tl{
+  background-color: red;
+  transform: translateX(-0.25em) translateY(-0.25em) scale(5);
+}
+
+.button:hover .br{
+  background-color: green;
+  transform: scale(3);
+  border-radius: 6px;
+}
+
+</style></head><body>
+
+		<div class="canvas">
+		<div class="calcBody">
+
+		<div class="inputOutputHead"><textarea class="input"></textarea><textarea class="output"></textarea></div>
+
+		<div class="buttonBody">
+
+			<div class="row upside">
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">C</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">(</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">)</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">+</div><div class="br"></div></div>
+				<div class="button operator backspace"><div class="tl"></div><div class="textInsideButton">«</div><div class="br"></div></div>
+			</div>
+
+			<div class="row mid">
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">7</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">8</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">9</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">—</div><div class="br"></div></div>
+			</div>
+
+			<div class="row mid middest">
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">4</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">5</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">6</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">×</div><div class="br"></div></div>
+				<div class="button operator" id="c"><div class="tl" id="a"></div><div class="textInsideButton">±</div><div class="br" id="b"></div></div>
+			</div>
+
+			<div class="row mid">
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">1</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">2</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">3</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">÷</div><div class="br"></div></div>
+			</div>
+
+			<div class="row downside">
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">.</div><div class="br"></div></div>
+				<div class="button operand"><div class="tl"></div><div class="textInsideButton">0</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">%</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">^</div><div class="br"></div></div>
+				<div class="button operator"><div class="tl"></div><div class="textInsideButton">=</div><div class="br"></div></div>
+			</div>
+		</div>
+	</div>
+
+
+</body><script type="text/javascript">
+
+$(()=>{
+
+
+function solvingTheStack(postfixStack){
+
+	let solutionStack = [].concat(postfixStack), outputStack = [];
+
+	while(solutionStack.length != 0){
+	if(!isNaN(parseInt(solutionStack[0]))){
+
+		let isfloat = false;
+
+		for(let i of solutionStack[0])
+			if(i == '.'){
+				isfloat = true;
+				break;
+			}
+
+		if(isfloat)
+			outputStack.push(parseFloat(solutionStack.shift()));	
+
+		else
+			outputStack.push(parseInt(solutionStack.shift()));
+	}
+
+	if(solutionStack[0] == '+' || solutionStack[0] == '×' || solutionStack[0] == '—' || solutionStack[0] == '÷' || solutionStack[0] == '^'){
+
+		let input1 = 0, input2 = 0, output = 0;
+
+		if(solutionStack[0] == '+'){
+			input2 = outputStack.pop();
+			input1 = outputStack.pop();
+			output = input1 + input2;
+			outputStack.push(output);
+		}
+
+		if(solutionStack[0] == '—'){
+			input2 = outputStack.pop();
+			input1 = outputStack.pop();
+			output = input1 - input2;
+			outputStack.push(output);
+		}
+
+		if(solutionStack[0] == '×'){
+			input2 = outputStack.pop();
+			input1 = outputStack.pop();
+			output = input1 * input2;
+			outputStack.push(output);
+		}
+
+		if(solutionStack[0] == '÷'){
+			input2 = outputStack.pop();
+			input1 = outputStack.pop();
+			output = input1 / input2;
+			outputStack.push(output);
+		}
+
+		if(solutionStack[0] == '^'){
+			input2 = outputStack.pop();
+			input1 = outputStack.pop();
+			output = Math.pow(input1,input2);
+			outputStack.push(output);
+		} 
+
+		solutionStack.shift();
+	}
+
+}
+
+
+	return outputStack;
+}
+
+	function precedence(operator){
+
+		if(operator == '^')
+			return 3;
+
+		if(operator == '÷' || operator == '×')
+			return 2;
+
+		if(operator == '+' || operator == '—')
+			return 1;
+
+		else
+			return 4;
+	}
+
+let rprStack = [], operatorStack = [], operatorClickLastTime = true, infix = [], calculationDone = false;
+
+	operatorStack.push('(');
+
+$('.button').click(function(event){
+
+			infix.push($(this).text());
+
+		if($(this).hasClass('operand')){
+
+
+			if(operatorClickLastTime){
+				rprStack.push($(this).text());
+				operatorClickLastTime = false;
+			}
+
+			else{
+				rprStack.push(rprStack.pop().concat($(this).text()));
+
+			infix.pop(); infix.pop();
+				infix.push(rprStack[rprStack.length-1]);
+			}
+
+		}
+
+		if($(this).hasClass('operator') && !$(this).hasClass('backspace')){
+
+			operatorClickLastTime = true;
+
+				if($(this).text() == '+' || $(this).text() == '×' || $(this).text() == '—' || $(this).text() == '÷' || $(this).text() == '^'){
+
+					for(let i=operatorStack.length-1; i>=0; --i){
+
+						if(precedence(operatorStack[i]) >= precedence($(this).text())){
+							if(operatorStack[i] == '(')
+								break;
+
+							console.log(precedence(operatorStack[i]), precedence($(this).text()));
+							let element = operatorStack.pop()
+							rprStack.push(element);
+
+
+						}
+
+						else break;
+					}
+
+					operatorStack.push($(this).text());
+				}
+
+
+		if($(this).text() == '(')
+			operatorStack.push($(this).text());
+
+
+		if($(this).text() == ')' || $(this).text() == '='){
+
+				for(let i=operatorStack.length-1; i>=0; --i){
+
+						if(operatorStack[i] != '(')
+							rprStack.push(operatorStack.pop());
+
+						else{
+							operatorStack.pop();
+							break;}
+
+
+				if($(this).text() == '='){
+						solvingTheStack(rprStack);
+						calculationDone = !calculationDone;
+				}
+
+		}}
+
+		if($(this).text() == '±' || $(this).text() == 'C'){
+			console.log("ffff");
+
+					if($(this).text() == '±'){
+						infix.pop(); infix.pop();
+
+						let isfloat = false, element = 1;
+
+						for(let i of rprStack[rprStack.length-1])
+							if(i == '.'){
+								isfloat = true;
+								break;
+							}
+
+						if(isfloat)
+							element = parseFloat(rprStack.pop());
+
+						else
+							element = parseInt(rprStack.pop());
+
+						element*=(-1);
+
+						rprStack.push(element.toString());
+							infix.push(rprStack[rprStack.length-1]);
+
+						operatorClickLastTime = false;
+
+					}
+
+					if($(this).text() == 'C'){
+
+						while(infix.length != 0)
+							infix.pop();
+
+						let j = operatorStack.length-1;
+							for(let i=1; i<=j; ++i)
+								operatorStack.pop();
+
+						j = rprStack.length;
+							for(let i=1; i<=j; ++i)
+								rprStack.pop();
+					}
+			}
+
+
+					if($(this).text() == '%'){
+						infix.pop(); 			infix.pop();
+
+						let isfloat = false;
+
+						for(let i of rprStack[rprStack.length-1])
+							if(i == '.'){
+								isfloat = true;
+								break;
+							}
+
+						if(isfloat){
+							let element = parseFloat(rprStack.pop()) * 0.01;
+
+							rprStack.push(element.toString());
+						}
+
+						else{
+							let element = parseInt(rprStack.pop()) * 0.01;
+
+							rprStack.push(element.toString());
+						}
+							infix.push(rprStack[rprStack.length-1]);
+					}
+
+
+					if($(this).text() == '.'){
+						infix.pop(); 			infix.pop();
+
+						rprStack.push(rprStack.pop().concat('.'));
+
+						operatorClickLastTime = false;
+						infix.push(rprStack[rprStack.length-1]);
+		}
+
+	}
+
+		if($(this).hasClass('operator') && $(this).hasClass('backspace')){
+
+				infix.pop();
+
+						if(!operatorClickLastTime){
+							rprStack.pop();
+						}
+
+						else{
+							operatorStack.pop();
+
+							for(let i=rprStack.length-1; i>=0; --i){
+								
+								if(isNaN(parseInt(rprStack[i])))
+									operatorStack.push(rprStack.pop());
+
+								else break;
+						}
+					}
+
+					operatorClickLastTime = !operatorClickLastTime;
+			}
+
+	let outputStack = solvingTheStack(rprStack);
+	console.log('444', outputStack, calculationDone);
+
+	let inputString = infix.join(" ");
+
+	$('.input').text(inputString).css("font", "2em monospace");
+
+	let outputScript;
+	let outlet = outputStack.join(" ");
+
+	if(!calculationDone)
+	outputScript = 'output in progress... => '.concat(outlet);
+
+	else
+	outputScript = 'finaloutput... => '.concat(outlet);
+	
+	$('.output').text(outputScript).css("font", "2em monospace");
+
+	console.log('rpr --->', rprStack);
+});
+
+});
+
+</script></html>

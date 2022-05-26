@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>webpage!</title><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@3.0.1/lib/anime.min.js"></script><style>
+
+	.timer{
+		display: flex;
+		border-radius: 50%;
+		width: 100px;
+		height: 100px;
+		background-color: pink;
+		background-clip: content-box;
+		border: 2px double brown;
+    	position: relative;
+
+    	margin: auto;
+	}
+
+	.seconds{
+		margin: auto;
+		position: relative;
+		width: 2px;
+		height: 2px;
+		border-radius: 50%;
+		left: 1px;
+	}
+
+	.milliSeconds{
+		width: 2px;
+		height: 2px;
+		border-radius: 50%;
+		position: relative;
+		top: 49px;
+		left: -49px;
+	}
+
+	.secondsHand{
+		position: relative;
+		height: 50px;
+		width: 2px;
+		border-radius: 2px;
+		background-color: brown;
+		top: -48px;
+	}
+
+	.milliSecondsHand{
+		position: relative;
+		height: 50px;
+		width: 2px;
+		border-radius: 2px;
+		background-color: darkolivegreen;
+		top: -48px;
+	}
+
+	.secondsElapsed{
+		position: absolute;
+		height: 20px; 
+		width: 20px;
+		background-color: skyblue;
+		border-radius: 50%;
+		border: 2px double darkblue;
+		font: bolder 0.95em monospace;
+		text-align: center;
+    	color: darkblue;
+
+    	opacity: 0.5;
+
+	    left: calc(50% - 10px);
+	    top: calc(50% - 10px);
+	}
+
+
+	#a{
+	    transform: rotate(-90deg) translateX(65.5px) translateY(-2px);
+	}
+
+	#b{
+	    transform: rotate(-30deg) translateX(63px) translateY(-2px);
+	}
+
+	#c{
+	    transform: rotate(30deg) translateX(61px) translateY(1px);
+	}
+
+	#d{
+	    transform: rotate(90deg) translateX(61.5px) translateY(2px);
+	}
+
+	#e{
+	    transform: rotate(150deg) translateX(64px) translateY(2px);
+	}
+
+	#f{
+	  	transform: rotate(210deg) translateX(66px) translateY(2px);
+	}
+
+
+	.timerInJs{
+		display: flex;
+		background-color: lightsteelblue;
+		width: calc(100vw - 20px);
+		height: calc(100vh - 100px);
+		border-radius: 8px;
+		border: 2px solid royalblue;
+	}
+
+	button{
+		font: 1.5em monospace;
+		color: brown;
+		border: 2px double orange;
+		border-radius: 6px;
+	}
+
+	.displayMilli{
+		font: 1.5em monospace;
+		color: darkorange;
+		border-radius: 15px;
+		border: 2px dotted white;
+	}
+
+	.displayMilli::before{
+		content: 'ms : ';
+		font: 1.7em monospace;
+		color: darkgoldenrod;
+	}
+
+	.display{
+		font: 1.5em monospace;
+		color: darkorange;
+		border-radius: 15px;
+		border: 2px dotted white;
+	}
+
+	.display::before{
+		content: 's : ';
+		font: 1.7em monospace;
+		color: darkgoldenrod;
+	}	
+
+	.displayCanvas{
+		display: flex;
+		background-color: lightpink;
+		border-radius: 8px;
+		margin: 2px;
+		border: 4px double purple;
+		background-clip: content-box;
+	}
+
+	.display, .displayMilli{
+		margin: auto;
+		position: relative;
+	}
+
+
+</style></head><body>
+
+
+<div class="timerInJs">
+	<div class="timer">
+		  <div class="secondsElapsed" id="a"><div style="transform: rotate(90deg);" id="el1">1</div></div>
+		  <div class="secondsElapsed" id="b"><div style="transform: rotate(30deg);" id="el2">10</div></div>
+		  <div class="secondsElapsed" id="c"><div style="transform: rotate(-30deg);" id="el3">20</div></div>
+		  <div class="secondsElapsed" id="d"><div style="transform: rotate(-90deg);" id="el4">30</div></div>
+		  <div class="secondsElapsed" id="e"><div style="transform: rotate(-150deg);" id="el5">40</div></div>
+		  <div class="secondsElapsed" id="f"><div style="transform: rotate(-210deg);" id="el6">50</div></div>
+
+		<div class="seconds">
+			<div class="secondsHand"></div>
+		</div>
+		<div class="milliSeconds">
+			<div class="milliSecondsHand"></div>
+		</div>
+	</div>
+
+	<button id="play">play</button>
+	<button id="pause">pause</button>
+	<button id="reset">reset</button>
+
+
+</div>
+
+<div class="displayCanvas">
+	<div class="displayMilli"></div>
+	<div class="display"></div>
+</div>
+
+</body><script type="text/javascript">
+
+$(()=>{
+
+	function milliSecondsTimer(){
+		return anime({
+		  targets: '.milliSeconds',
+		  rotate: [0, 360],
+		  duration: 60000,
+		  easing: 'steps(60, start)',
+		  direction: 'forwards',
+		  loop: true
+		}); 
+	}
+
+	function SecondsTimer(){
+		return anime({
+		  targets: '.seconds',
+		  rotate: [0, 360],
+		  duration: 1000,
+		  easing: 'steps(60, start)',
+		  direction: 'forwards',
+		  loop: true
+		});
+	}
+
+	function secondsElapsedBulb(){
+		let animation = anime.timeline({
+			easing: 'linear',
+			loop: true
+		});
+
+		return animation.add({
+			targets: '#el1, #el2, #el3, #el4, #el5, #el6',
+			scale: 4,
+			duration: 400,
+			easing: 'linear',
+			direction: 'forwards',
+			delay: anime.stagger(10000)
+		}).add({
+			targets: '#el6, #el1',
+			scale: 4,
+			duration: 0,
+			easing: 'linear',
+			direction: 'forwards',
+			delay: anime.stagger(10000)
+		});
+	}
+
+	let splayer = {}, msplayer = {}, secsElapsed = {};
+
+		splayer = SecondsTimer();
+		splayer.pause();
+		msplayer = milliSecondsTimer();
+		msplayer.pause();
+		secsElapsed = secondsElapsedBulb();
+		secsElapsed.pause();
+
+	$('#play').click(function(event){
+		splayer.play();
+		msplayer.play();
+		secsElapsed.play();
+	});
+
+	$('#pause').click(function(events){
+		splayer.pause();
+		msplayer.pause();
+		secsElapsed.pause();
+	});
+
+	$('#reset').click(function(events){
+		splayer.restart();
+		splayer.pause();
+		msplayer.restart();
+		msplayer.pause();
+		secsElapsed.restart();
+		secsElapsed.pause();
+	});
+
+    let milliSecs = 0, secs = 0, idmillisecs = 0, idsecs = 0, msSinceLast = 0, referenceMs = 0, elapsedMs = 0, id = 0;
+
+	function giveElapsedSecs(){
+		return parseInt(milliSecs / 1000);
+	}
+
+	function giveElapsedMs(){
+	    elapsedMs = new Date;
+	    elapsedMs = elapsedMs.getTime();
+	    elapsedMs = parseInt(elapsedMs - referenceMs) + msSinceLast;
+
+	    return elapsedMs;
+	}
+
+	function giveMs(){
+
+	    milliSecs = giveElapsedMs();
+	    secs = giveElapsedSecs();
+
+	    idmillisecs = setTimeout(giveElapsedMs, 1);
+	    idsecs = setTimeout(giveElapsedSecs, 1000);
+	    id = setTimeout(giveMs, 1);
+
+		$('.displayMilli').text(milliSecs - secs*1000);
+		$('.display').text(secs);
+
+	}
+
+			$('#play').click(function(event){
+				referenceMs = new Date();
+				referenceMs = referenceMs.getTime();
+				giveMs();
+			});
+
+
+			$('#pause').click(function(event){
+				clearTimeout(idmillisecs);
+				clearTimeout(idsecs);
+				clearTimeout(id);
+
+				msSinceLast = parseInt($('.displayMilli').text());
+
+				$('.displayMilli').text(milliSecs);
+				$('.display').text(secs);
+
+			});
+
+
+			$('#reset').click(function(event){
+				clearTimeout(idmillisecs);
+				clearTimeout(idsecs);
+				clearTimeout(id);
+
+		    	milliSecs = 0, secs = 0, idmillisecs = 0, idsecs = 0, msSinceLast = 0, referenceMs = 0, elapsedMs = 0;
+
+				$('.displayMilli').text('0');
+				$('.display').text('0');
+
+			});
+
+
+});
+
+
+</script></html>

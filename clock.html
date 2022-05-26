@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>webpage!</title><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><style>
+
+.date, .time{
+	width: min-content;
+	height: min-content;
+	border: 4px dotted red;
+	border-radius: 15px;
+	background-clip: content-box;
+	font: 1em monospace;
+}
+
+.date{
+	background-color: lightblue;
+	color: darkorange;
+}
+
+.time{
+	background-color: lightpink;
+	color: darkolivegreen;
+}
+
+</style></head><body>
+
+	<div class="date"></div>
+	<div class="time"></div>
+
+</body><script type="text/javascript">
+
+$(()=>{
+
+function showTime(){
+
+	let today = new Date(), info;
+	let dd = String(today.getDate()).padStart(2, '0');
+	let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	let yy = today.getFullYear();
+
+	info = mm + '/' + dd + '/' + yy;
+
+	$('.date').text(info);
+
+	let ss = String(today.getSeconds()).padStart(2, '0');
+	mm = String(today.getMinutes()).padStart(2, '0');
+	let hh = String(today.getHours()).padStart(2, '0');
+
+	info = hh + '/' + mm + '/' + ss;
+
+	$('.time').text(info);
+
+	setTimeout(showTime, 1000);
+}
+
+	showTime();
+
+});
+
+</script></html>
